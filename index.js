@@ -1,40 +1,39 @@
-// On form submission, save data to localStorage
-document.getElementById('habit-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    // Existing code to add the row
-    // ...
-    
-    // Save to localStorage
-    const habitData = {
-        date: date,
-        cycling: cycling,
-        reading: reading,
-        coding: coding,
-        yoga: yoga,
-        comments: comments
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+let habits = []; // Store habit data in memory for now
+
+// Set the view engine to EJS
+app.set('view engine', 'ejs');
+
+// Middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Routes
+app.get('/', (req, res) => {
+    res.render('index.ejs', { habits });
+});
+
+app.post('/add-habit', (req, res) => {
+    const newHabit = {
+        date: req.body.date,
+        cycling: req.body.cycling || 'No',
+        reading: req.body.reading || 'No',
+        coding: req.body.coding || 'No',
+        yoga: req.body.yoga || 'No',
+        comments: req.body.comments || ''
     };
-    
-    let habitList = JSON.parse(localStorage.getItem('habitList')) || [];
-    habitList.push(habitData);
-    localStorage.setItem('habitList', JSON.stringify(habitList));
-    
-    // Reload table from storage on page load
-    function loadTable() {
-        const habitList = JSON.parse(localStorage.getItem('habitList')) || [];
-        habitList.forEach(habit => {
-            const newRow = `<tr>
-                <td>${habit.date}</td>
-                <td>${habit.cycling}</td>
-                <td>${habit.reading}</td>
-                <td>${habit.coding}</td>
-                <td>${habit.yoga}</td>
-                <td>${habit.comments}</td>
-            </tr>`;
-            document.getElementById('habit-table-body').insertAdjacentHTML('beforeend', newRow);
-        });
-    }
-    
-    // Call loadTable on page load
-    loadTable();
+    //console.log(newHabit);
+    habits.push(newHabit);
+    res.redirect('/');
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
 });
