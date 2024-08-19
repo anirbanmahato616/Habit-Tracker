@@ -79,12 +79,12 @@
                 <% if (habits.length > 0) { %>
                     <% habits.forEach(function(habit) { %>
                         <tr>
-                            <td><%= habit.date %></td>
-                            <td><%= habit.cycling %></td>
-                            <td><%= habit.reading %></td>
-                            <td><%= habit.coding %></td>
-                            <td><%= habit.yoga %></td>
-                            <td><%= habit.comments %></td>
+                            <td><%= habit.date.toISOString().split('T')[0] %></td>
+                            <td><%= habit.cycling ? 'Yes' : 'No' %></td>
+                            <td><%= habit.reading ? 'Yes' : 'No' %></td>
+                            <td><%= habit.coding ? 'Yes' : 'No' %></td>
+                            <td><%= habit.yoga ? 'Yes' : 'No' %></td>
+                            <td><%= habit.comments || '' %></td>
                         </tr>
                     <% }) %>
                 <% } else { %>
