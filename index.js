@@ -36,11 +36,11 @@ app.get('/', async (req, res) => {
 });
 
 app.post('/add-habit', async (req, res) => {
-    const { date, cycling, reading, coding, yoga, comments } = req.body;
+    const { date, cycling, reading, coding, yoga, comments, month } = req.body;
     try {
         await pool.query(
-            'INSERT INTO habits (date, cycling, reading, coding, yoga, comments) VALUES ($1, $2, $3, $4, $5, $6)',
-            [date, cycling , reading , coding , yoga , comments]
+            'INSERT INTO habits (date, cycling, reading, coding, yoga, comments, month) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+            [date, cycling , reading , coding , yoga , comments, month]
         );
         res.redirect('/');
     } catch (err) {

@@ -58,6 +58,9 @@
                     <input type="text" name="comments" class="form-control" placeholder="Comments">
                 </div>
                 <div class="col">
+                    <input type="varchar" name="month" class="form-control" placeholder="Month">
+                </div>
+                <div class="col">
                     <button type="submit" class="btn btn-primary">Add Entry</button>
                 </div>
             </div>
@@ -73,6 +76,7 @@
                     <th>Coding</th>
                     <th>Yoga</th>
                     <th>Comments</th>
+                    <th>Month</th>
                 </tr>
             </thead>
             <tbody>
@@ -85,6 +89,7 @@
                             <td><%= habit.coding ? 'Yes' : 'No' %></td>
                             <td><%= habit.yoga ? 'Yes' : 'No' %></td>
                             <td><%= habit.comments || '' %></td>
+                            <td><%= habit.month || '' %></td>
                         </tr>
                     <% }) %>
                 <% } else { %>
