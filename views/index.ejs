@@ -28,37 +28,40 @@
         <form action="/add-habit" method="POST" class="mb-4">
             <div class="row">
                 <div class="col">
-                    <input type="date" name="date" class="form-control" required>
+                    <!--<input type="date" name="date" class="form-control" required> -->
+                    <input type="text" name="date" class="form-control" placeholder="Date">
                 </div>
                 <div class="col">
-                    <select name="cycling" class="form-control">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <input type="text" name="cycling" class="form-control" placeholder="Cycling">
                 </div>
                 <div class="col">
-                    <select name="reading" class="form-control">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <input type="text" name="reading" class="form-control" placeholder="Reading">
                 </div>
                 <div class="col">
-                    <select name="coding" class="form-control">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <input type="text" name="coding" class="form-control" placeholder="Coding">
                 </div>
                 <div class="col">
-                    <select name="yoga" class="form-control">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <input type="text" name="yoga" class="form-control" placeholder="Yoga">
                 </div>
                 <div class="col">
                     <input type="text" name="comments" class="form-control" placeholder="Comments">
                 </div>
                 <div class="col">
-                    <input type="varchar" name="month" class="form-control" placeholder="Month">
+                    <select name="month" class="form-control">
+                        <option value="">Enter month..</option>
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                    </select>
                 </div>
                 <div class="col">
                     <button type="submit" class="btn btn-primary">Add Entry</button>
@@ -83,11 +86,12 @@
                 <% if (habits.length > 0) { %>
                     <% habits.forEach(function(habit) { %>
                         <tr>
-                            <td><%= habit.date.toISOString().split('T')[0] %></td>
-                            <td><%= habit.cycling ? 'Yes' : 'No' %></td>
-                            <td><%= habit.reading ? 'Yes' : 'No' %></td>
-                            <td><%= habit.coding ? 'Yes' : 'No' %></td>
-                            <td><%= habit.yoga ? 'Yes' : 'No' %></td>
+                            <!--<td><%# habit.date.toISOString().split('T')[0] %></td> -->
+                            <td><%= habit.date || '' %></td>
+                            <td><%= habit.cycling || '' %></td>
+                            <td><%= habit.reading || '' %></td>
+                            <td><%= habit.coding || '' %></td>
+                            <td><%= habit.yoga || '' %></td>
                             <td><%= habit.comments || '' %></td>
                             <td><%= habit.month || '' %></td>
                         </tr>
