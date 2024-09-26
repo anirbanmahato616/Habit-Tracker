@@ -28,7 +28,7 @@ let currentUserId = 0;
 async function getCurrentUser() {
   try {
     const result = await db.query("SELECT * FROM users WHERE id = $1", [currentUserId]);
-    return result.rows[0];
+    return result.rows[0]; // Return the user object
   } catch (err) {
     console.error("Error fetching user:", err);
     return null;
@@ -57,9 +57,15 @@ app.get("/habit", async (req, res) => {
     if (!currentUser) {
       return res.status(400).send("User not found");
     }
-    const result = await db.query('SELECT * FROM habits WHERE user_id = $1 ORDER BY date DESC', [currentUser.id]);
+
+    const table_name = currentUser.allocation_tables; // Fix this line
+    const result = await db.query(`
+      SELECT * FROM ${table_name} 
+      WHERE user_id = $1 
+      ORDER BY date DESC`, [currentUser.id]);
+    
     const habits = result.rows;
-    res.render("index.ejs", { habits });
+    res.render("new.ejs", { habits });
   } catch (err) {
     console.error("Error fetching habits:", err);
     res.status(500).send('Server error');
@@ -68,11 +74,22 @@ app.get("/habit", async (req, res) => {
 
 // Adding a habit
 app.post('/add-habit', async (req, res) => {
-  const { date, cycling, reading, coding, yoga, comments, month } = req.body;
+  const { date, comments, month, habits, habitValues } = req.body;
+  let habitData = {};
+  
+  // Pairing habit names with values
+  habits.forEach((habit, index) => {
+    habitData[habit] = habitValues[index];
+  });
+
   try {
+    const currentUser = await getCurrentUser();
+    const table_name = currentUser.allocation_tables;
+    
     await db.query(
-      'INSERT INTO habits (date, cycling, reading, coding, yoga, comments, month, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-      [date, cycling, reading, coding, yoga, comments, month, currentUserId]
+      `INSERT INTO ${table_name} (date, comments, month, habit_values, user_id) 
+       VALUES ($1, $2, $3, $4, $5)`,
+      [date, comments, month, habitData, currentUser.id]
     );
     res.redirect('/habit');
   } catch (err) {
@@ -80,6 +97,7 @@ app.post('/add-habit', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
 
 // User registration
 app.post("/register", async (req, res) => {
@@ -101,6 +119,26 @@ app.post("/register", async (req, res) => {
             [email, hash]
           );
           currentUserId = result.rows[0].id;
+
+          // Dynamically setting the table name for the user
+          const tableName = `table_${currentUserId}`;
+          await db.query(
+            `UPDATE users SET allocation_tables = $1 WHERE id = $2`,
+            [tableName, currentUserId]
+          );
+
+          // Create the dynamic table for this user
+          await db.query(`
+            CREATE TABLE IF NOT EXISTS ${tableName} (
+              id SERIAL PRIMARY KEY,
+              date DATE,
+              comments TEXT,
+              month VARCHAR(50),
+              habit_values JSONB,
+              user_id INTEGER REFERENCES users(id)
+            );
+          `);
+
           res.redirect("/habit");
         }
       });

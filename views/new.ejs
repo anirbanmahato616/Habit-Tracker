@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Tracker</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+      table {
+          width: 100%;
+          border-collapse: collapse;
+      }
+      th, td {
+          border: 1px solid black;
+          padding: 10px;
+          text-align: center;
+      }
+      th {
+          background-color: #f2f2f2;
+      }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1 class="my-4">My Habit Progress Tracker</h1>
+
+    <!-- Form for Data Input -->
+    <form action="/add-habit" method="POST" id="habit-form" class="mb-4">
+        <div class="row mb-3">
+            <div class="col">
+                <input type="date" name="date" class="form-control" required>
+            </div>
+            
+            <div class="col">
+                <input type="text" name="comments" class="form-control" placeholder="Comments">
+            </div>
+            <div class="col">
+                <select name="month" class="form-control" required>
+                    <option value="">Enter month..</option>
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Dynamic Habit Input Fields -->
+        <div id="habits-container">
+            <div class="row habit-row mb-2">
+                <div class="col">
+                    <input type="text" name="habits[]" placeholder="Habit Name" class="form-control" required>
+                </div>
+                <div class="col">
+                    <input type="text" name="habitValues[]" placeholder="Goal/Value" class="form-control" required>
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-danger remove-habit">Remove</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Habit Button -->
+        <div class="mb-3">
+            <button type="button" id="add-habit" class="btn btn-secondary">Add New Habit</button>
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary">Add Entry</button>
+        </div>
+    </form>
+
+    <!-- Table for Tracking -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Comments</th>
+                <th>Month</th>
+                <% if (habits && habits.length > 0) { %>
+                    <% for (let i = 0; i < habits[0].habits.length; i++) { %>
+                        <th><%= habits[0].habits[i] %></th>
+                    <% } %>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (habits && habits.length > 0) { %>
+                <% habits.forEach(function(habit) { %>
+                    <tr>
+                        <td><%= habit.date %></td>
+                        <td><%= habit.comments %></td>
+                        <td><%= habit.month %></td>
+                        <% if (habit.habitValues && habit.habitValues.length > 0) { %>
+                            <% habit.habitValues.forEach(function(value) { %>
+                                <td><%= value %></td>
+                            <% }) %>
+                        <% } else { %>
+                            <td colspan="<%= habits[0].habits.length %>">No values for habits</td>
+                        <% } %>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="6">No entries yet. Start tracking your habits!</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+  </div>
+
+  <script>
+      // Add a new habit input field dynamically
+      document.getElementById('add-habit').addEventListener('click', function() {
+          const container = document.getElementById('habits-container');
+          const newHabitRow = document.createElement('div');
+          newHabitRow.classList.add('row', 'habit-row', 'mb-2');
+
+          newHabitRow.innerHTML = `
+              <div class="col">
+                  <input type="text" name="habits[]" placeholder="Habit Name" class="form-control" required>
+              </div>
+              <div class="col">
+                  <input type="text" name="habitValues[]" placeholder="Goal/Value" class="form-control" required>
+              </div>
+              <div class="col-auto">
+                  <button type="button" class="btn btn-danger remove-habit">Remove</button>
+              </div>
+          `;
+          
+          container.appendChild(newHabitRow);
+      });
+
+      // Remove habit input field
+      document.addEventListener('click', function(e) {
+          if (e.target && e.target.classList.contains('remove-habit')) {
+              e.target.closest('.habit-row').remove();
+          }
+      });
+  </script>
+
+</body>
+
+</html>
