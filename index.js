@@ -98,7 +98,6 @@ app.post('/add-habit', async (req, res) => {
   }
 });
 
-
 // User registration
 app.post("/register", async (req, res) => {
   const email = req.body.username;

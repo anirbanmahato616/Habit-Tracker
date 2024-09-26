@@ -89,9 +89,9 @@
                 <th>Comments</th>
                 <th>Month</th>
                 <% if (habits && habits.length > 0) { %>
-                    <% for (let i = 0; i < habits[0].habits.length; i++) { %>
-                        <th><%= habits[0].habits[i] %></th>
-                    <% } %>
+                  <% Object.keys(habits[0].habit_values).forEach(function(habit) { %>
+                    <th><%= habit %></th>
+                  <% }) %>
                 <% } %>
             </tr>
         </thead>
@@ -102,13 +102,9 @@
                         <td><%= habit.date %></td>
                         <td><%= habit.comments %></td>
                         <td><%= habit.month %></td>
-                        <% if (habit.habitValues && habit.habitValues.length > 0) { %>
-                            <% habit.habitValues.forEach(function(value) { %>
-                                <td><%= value %></td>
-                            <% }) %>
-                        <% } else { %>
-                            <td colspan="<%= habits[0].habits.length %>">No values for habits</td>
-                        <% } %>
+                        <% Object.values(habit.habit_values).forEach(function(value) { %>
+                          <td><%= value %></td>
+                        <% }) %>
                     </tr>
                 <% }) %>
             <% } else { %>
