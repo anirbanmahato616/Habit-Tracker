@@ -65,6 +65,7 @@ app.get("/habit", async (req, res) => {
       ORDER BY date DESC`, [currentUser.id]);
     
     const habits = result.rows;
+    console.log(habits);
     res.render("new.ejs", { habits });
   } catch (err) {
     console.error("Error fetching habits:", err);

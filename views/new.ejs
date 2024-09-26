@@ -84,36 +84,56 @@
     <!-- Table for Tracking -->
     <table class="table table-striped">
         <thead>
-            <tr>
-                <th>Date</th>
-                <th>Comments</th>
-                <th>Month</th>
-                <% if (habits && habits.length > 0) { %>
-                  <% Object.keys(habits[0].habit_values).forEach(function(habit) { %>
-                    <th><%= habit %></th>
-                  <% }) %>
-                <% } %>
-            </tr>
+            <% let uniqueHabits = []; %> <!-- Declare uniqueHabits outside the condition -->
+    
+            <% if (habits && habits.length > 0) { %>
+                <!-- Collect all unique habit names -->
+                <% habits.forEach(function(habit) { %>
+                    <% Object.keys(habit.habit_values).forEach(function(habitName) { %>
+                        <% if (!uniqueHabits.includes(habitName)) { %>
+                            <% uniqueHabits.push(habitName); %> <!-- Add the habit name to the array -->
+                        <% } %>
+                    <% }); %>
+                <% }); %>
+    
+                <!-- Render the unique habit names as table headers -->
+                <tr>
+                    <th>Date</th>
+                    <th>Comments</th>
+                    <th>Month</th>
+                    <% uniqueHabits.forEach(function(habitName) { %>
+                        <th><%= habitName %></th> <!-- Render each unique habit name as a table header -->
+                    <% }); %>
+                </tr>
+            <% } else { %>
+                <tr>
+                    <th colspan="4">No entries found</th> <!-- Adjust colspan based on your needs -->
+                </tr>
+            <% } %>
         </thead>
         <tbody>
             <% if (habits && habits.length > 0) { %>
                 <% habits.forEach(function(habit) { %>
                     <tr>
-                        <td><%= habit.date %></td>
+                        <td><%= new Date(habit.date).toLocaleDateString() %></td>
                         <td><%= habit.comments %></td>
                         <td><%= habit.month %></td>
-                        <% Object.values(habit.habit_values).forEach(function(value) { %>
-                          <td><%= value %></td>
-                        <% }) %>
+    
+                        <!-- Loop through unique habits to ensure proper alignment of values -->
+                        <% uniqueHabits.forEach(function(habitName) { %>
+                            <!-- Check if the current habit has a value for this habitName -->
+                            <td><%= habit.habit_values[habitName] ? habit.habit_values[habitName] : 'N/A' %></td>
+                        <% }); %>
                     </tr>
-                <% }) %>
+                <% }); %>
             <% } else { %>
                 <tr>
-                    <td colspan="6">No entries yet. Start tracking your habits!</td>
+                    <td colspan="<%= uniqueHabits.length + 3 %>">No entries found</td> <!-- colspan adjusted based on the number of columns -->
                 </tr>
             <% } %>
         </tbody>
-    </table>
+    </table>    
+    
   </div>
 
   <script>
