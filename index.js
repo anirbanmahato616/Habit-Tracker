@@ -1,7 +1,10 @@
 import bcrypt from "bcrypt";
 import bodyParser from "body-parser";
+import dotenv from "dotenv";
 import express from "express";
 import pg from "pg";
+
+dotenv.config(); // ✅ Load .env variables
 
 const app = express();
 const port = 3000;
@@ -13,12 +16,13 @@ app.use(express.static("public"));
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
 
+// ✅ Use environment variables instead of hardcoding
 const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "habits",
-  password: "Anirban@123",
-  port: 5432,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 db.connect();
 
