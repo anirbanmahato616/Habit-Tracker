@@ -6,10 +6,15 @@ Built with Node.js, Express.js, PostgreSQL, Bootstrap, CSS, and JavaScript, the 
 ✨ Features
 
 ✅ Habit Tracking: Add and track daily habits such as reading, cycling, coding, or exercising.
+
 🔑 User Authentication: Secure sign-up and login system for personalized tracking.
+
 🎯 Goal Monitoring: Helps users stay consistent and reach personal milestones.
+
 🖥️ Responsive UI: Clean, mobile-friendly design built with Bootstrap for seamless navigation.
+
 🗄️ Database Integration: PostgreSQL used for efficient storage and retrieval of user habit data.
+
 ⚡ Performance: Fast, scalable backend powered by Node.js and Express.js.
 
 🚀 Tech Stack
